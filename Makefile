@@ -5,20 +5,13 @@
 # Use bash for inline if-statements in arch_patch target
 SHELL:=bash
 ARCH:=$(shell uname -m)
-OWNER?=jupyter
+OWNER?=martinclaus
 
 # Need to list the images in build dependency order
 ifeq ($(ARCH),ppc64le)
 ALL_STACKS:=base-notebook
 else
-ALL_STACKS:=base-notebook \
-	minimal-notebook \
-	r-notebook \
-	scipy-notebook \
-	tensorflow-notebook \
-	datascience-notebook \
-	pyspark-notebook \
-	all-spark-notebook
+ALL_STACKS:=base-notebook
 endif
 
 ALL_IMAGES:=$(ALL_STACKS)

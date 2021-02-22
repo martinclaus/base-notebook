@@ -9,7 +9,7 @@ ARG ROOT_CONTAINER=ubuntu:focal-20210119@sha256:3093096ee188f8ff4531949b8f6115af
 ARG BASE_CONTAINER=$ROOT_CONTAINER
 FROM $BASE_CONTAINER
 
-LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
+LABEL maintainer="Martin Claus <mclaus@geomar.de>"
 ARG NB_USER="jovyan"
 ARG NB_UID="1000"
 ARG NB_GID="100"
@@ -158,7 +158,8 @@ USER root
 
 # Prepare upgrade to JupyterLab V3.0 #1205
 RUN sed -re "s/c.NotebookApp/c.ServerApp/g" \
-    /etc/jupyter/jupyter_notebook_config.py > /etc/jupyter/jupyter_server_config.py
+    /etc/jupyter/jupyter_notebook_config.py > /etc/jupyter/jupyter_server_config.py && \
+    echo "c.ExtensionApp.open_browser = False" >> /etc/jupyter/jupyter_server_config.py
 
 RUN fix-permissions /etc/jupyter/
 
