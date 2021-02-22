@@ -53,11 +53,11 @@ if [ $(id -u) == 0 ] ; then
         # (it could be mounted, and we shouldn't create it if it already exists)
         if [[ ! -e "/home/$NB_USER" ]]; then
             echo "Relocating home dir to /home/$NB_USER"
-            mv /home/jovyan "/home/$NB_USER" || ln -s /home/jovyan "/home/$NB_USER"
+            mv $HOME "/home/$NB_USER" || ln -s $HOME "/home/$NB_USER"
         fi
-        # if workdir is in /home/jovyan, cd to /home/$NB_USER
-        if [[ "$PWD/" == "/home/jovyan/"* ]]; then
-            newcwd="/home/$NB_USER/${PWD:13}"
+        # if workdir is in $HOME, cd to /home/$NB_USER
+        if [[ "$PWD/" == "$HOME"* ]]; then
+            newcwd="/home/$NB_USER/"
             echo "Setting CWD to $newcwd"
             cd "$newcwd"
         fi
@@ -66,8 +66,13 @@ if [ $(id -u) == 0 ] ; then
     # Handle case where provisioned storage does not have the correct permissions by default
     # Ex: default NFS/EFS (no auto-uid/gid)
     if [[ "$CHOWN_HOME" == "1" || "$CHOWN_HOME" == 'yes' ]]; then
-        echo "Changing ownership of /home/$NB_USER to $NB_UID:$NB_GID with options '${CHOWN_HOME_OPTS}'"
-        chown $CHOWN_HOME_OPTS $NB_UID:$NB_GID /home/$NB_USER
+        if [[ "$NB_USER" == "jovyan" ]]; then
+            home_dir="$HOME"
+        else
+            home_dir="/home/$NB_USER"
+        fi
+        echo "Changing ownership of $home_dir to $NB_UID:$NB_GID with options '${CHOWN_HOME_OPTS}'"
+        chown $CHOWN_HOME_OPTS $NB_UID:$NB_GID $home_dir
     fi
     if [ ! -z "$CHOWN_EXTRA" ]; then
         for extra_dir in $(echo $CHOWN_EXTRA | tr ',' ' '); do
@@ -111,7 +116,7 @@ else
             if [[ -w /etc/passwd ]]; then
                 echo "Adding passwd file entry for $(id -u)"
                 cat /etc/passwd | sed -e "s/^jovyan:/nayvoj:/" > /tmp/passwd
-                echo "jovyan:x:$(id -u):$(id -g):,,,:/home/jovyan:/bin/bash" >> /tmp/passwd
+                echo "jovyan:x:$(id -u):$(id -g):,,,:$HOME:/bin/bash" >> /tmp/passwd
                 cat /tmp/passwd > /etc/passwd
                 rm /tmp/passwd
             else
@@ -120,7 +125,7 @@ else
         fi
 
         # Warn if the user isn't going to be able to write files to $HOME.
-        if [[ ! -w /home/jovyan ]]; then
+        if [[ ! -w $HOME ]]; then
             echo 'Container must be run with group "users" to update files'
         fi
     else

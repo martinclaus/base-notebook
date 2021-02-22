@@ -45,7 +45,7 @@ def test_uid_change(container):
         tty=True,
         user='root',
         environment=['NB_UID=1010'],
-        command=['start.sh', 'bash', '-c', 'id && touch /opt/conda/test-file']
+        command=['start.sh', 'bash', '-c', 'id && touch /app/conda/test-file']
     )
     # usermod is slow so give it some time
     c.wait(timeout=120)
@@ -109,14 +109,14 @@ def test_chown_extra(container):
         environment=[
             'NB_UID=1010',
             'NB_GID=101',
-            'CHOWN_EXTRA=/opt/conda',
+            'CHOWN_EXTRA=/app/conda',
             'CHOWN_EXTRA_OPTS=-R'
         ],
-        command=['start.sh', 'bash', '-c', 'stat -c \'%n:%u:%g\' /opt/conda/LICENSE.txt']
+        command=['start.sh', 'bash', '-c', 'stat -c \'%n:%u:%g\' /app/conda/LICENSE.txt']
     )
     # chown is slow so give it some time
     c.wait(timeout=120)
-    assert '/opt/conda/LICENSE.txt:1010:101' in c.logs(stdout=True).decode('utf-8')
+    assert '/app/conda/LICENSE.txt:1010:101' in c.logs(stdout=True).decode('utf-8')
 
 
 def test_chown_home(container):
@@ -129,10 +129,10 @@ def test_chown_home(container):
             'CHOWN_HOME=yes',
             'CHOWN_HOME_OPTS=-R'
         ],
-        command=['start.sh', 'bash', '-c', 'chown root:root /home/jovyan && ls -alsh /home']
+        command=['start.sh', 'bash', '-c', 'chown root:root /app/jovyan && ls -alsh /app']
     )
     c.wait(timeout=120)
-    assert "Changing ownership of /home/jovyan to 1000:100 with options '-R'" in c.logs(stdout=True).decode('utf-8')
+    assert "Changing ownership of /app/jovyan to 1000:100 with options '-R'" in c.logs(stdout=True).decode('utf-8')
 
 
 def test_sudo(container):
@@ -149,7 +149,7 @@ def test_sudo(container):
 
 
 def test_sudo_path(container):
-    """Container should include /opt/conda/bin in the sudo secure_path."""
+    """Container should include /app/conda/bin in the sudo secure_path."""
     c = container.run(
         tty=True,
         user='root',
@@ -158,11 +158,11 @@ def test_sudo_path(container):
     )
     rv = c.wait(timeout=10)
     assert rv == 0 or rv["StatusCode"] == 0
-    assert c.logs(stdout=True).decode('utf-8').rstrip().endswith('/opt/conda/bin/jupyter')
+    assert c.logs(stdout=True).decode('utf-8').rstrip().endswith('/app/conda/bin/jupyter')
 
 
 def test_sudo_path_without_grant(container):
-    """Container should include /opt/conda/bin in the sudo secure_path."""
+    """Container should include /app/conda/bin in the sudo secure_path."""
     c = container.run(
         tty=True,
         user='root',
@@ -170,7 +170,7 @@ def test_sudo_path_without_grant(container):
     )
     rv = c.wait(timeout=10)
     assert rv == 0 or rv["StatusCode"] == 0
-    assert c.logs(stdout=True).decode('utf-8').rstrip().endswith('/opt/conda/bin/jupyter')
+    assert c.logs(stdout=True).decode('utf-8').rstrip().endswith('/app/conda/bin/jupyter')
 
 
 def test_group_add(container, tmpdir):
