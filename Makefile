@@ -27,7 +27,7 @@ help:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 	@echo "jupyter/docker-stacks"
 	@echo "====================="
-	@echo "Replace % with a stack directory name (e.g., make build/minimal-notebook)"
+	@echo "Replace % with a stack directory name (e.g., make build/base-notebook)"
 	@echo
 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
