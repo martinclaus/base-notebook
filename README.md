@@ -1,5 +1,5 @@
 [![DockerHub badge](https://images.microbadger.com/badges/version/jupyter/base-notebook.svg)](https://microbadger.com/images/martinclaus/base-notebook "Recent tag/version of jupyter/base-notebook")
-[![Binder badget](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/martinclaus/docker-stacks/master?filepath=README.ipynb "Launch a martinclaus/base-notebook container on mybinder.org")
+[![Binder badget](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/martinclaus/base-notebook/master "Launch a martinclaus/base-notebook container on mybinder.org")
 
 # Jupyter Docker Stacks base-notebook
 
@@ -16,7 +16,7 @@ more information is available in the [documentation](https://jupyter-docker-stac
 ## Quick Start
 
 You can try a
-[relatively recent build of the jupyter/base-notebook image on mybinder.org](https://mybinder.org/v2/gh/martinclaus/docker-stacks/master?filepath=README.ipynb)
+[relatively recent build of the jupyter/base-notebook image on mybinder.org](https://mybinder.org/v2/gh/martinclaus/base-notebook/master?filepath=README.ipynb)
 by simply clicking the preceding link. Otherwise, the two examples below may help you get started if
 you [have Docker installed](https://docs.docker.com/install/) and want to launch a single Jupyter server in a container.
 More information on the startup options are available in the [documentation](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html#docker-options)
