@@ -26,7 +26,7 @@ USER root
 # Conda version
 ARG conda_version="4.9.2"
 # Miniforge installer patch version
-ARG miniforge_patch_number="5"
+ARG miniforge_patch_number="7"
 # Miniforge installer architecture
 ARG miniforge_arch="x86_64"
 # Python implementation to use 
@@ -38,7 +38,7 @@ ARG miniforge_version="${conda_version}-${miniforge_patch_number}"
 # Miniforge installer
 ARG miniforge_installer="${miniforge_python}-${miniforge_version}-Linux-${miniforge_arch}.sh"
 # Miniforge checksum
-ARG miniforge_checksum="49dddb3998550e40adc904dae55b0a2aeeb0bd9fc4306869cc4a600ec4b8b47c"
+ARG miniforge_checksum="91d5aa5f732b5e02002a371196a2607f839bab166970ea06e6ecc602cb446848"
 
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
@@ -127,9 +127,9 @@ RUN wget --quiet "https://github.com/conda-forge/miniforge/releases/download/${m
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
 RUN conda install --quiet --yes \
-    'notebook=6.2.0' \
-    'jupyterhub=1.3.0' \
-    'jupyterlab=3.0.7' && \
+    'notebook' \
+    'jupyterhub' \
+    'jupyterlab' && \
     conda clean --all -f -y && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
