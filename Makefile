@@ -145,7 +145,7 @@ pull/%: DARGS?=
 pull/%: ## pull a jupyter image
 	docker pull $(DARGS) $(OWNER)/$(notdir $@)
 
-push/%: DARGS?=
+push/%: DARGS?=-a
 push/%: ## push all tags for a jupyter image
 	docker push $(DARGS) $(OWNER)/$(notdir $@)
 
