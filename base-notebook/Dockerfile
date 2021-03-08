@@ -31,14 +31,14 @@ ARG miniforge_patch_number="7"
 ARG miniforge_arch="x86_64"
 # Python implementation to use 
 # can be either Miniforge3 to use Python or Miniforge-pypy3 to use PyPy
-ARG miniforge_python="Miniforge3"
+ARG miniforge_python="Mambaforge"
 
 # Miniforge archive to install
 ARG miniforge_version="${conda_version}-${miniforge_patch_number}"
 # Miniforge installer
 ARG miniforge_installer="${miniforge_python}-${miniforge_version}-Linux-${miniforge_arch}.sh"
 # Miniforge checksum
-ARG miniforge_checksum="91d5aa5f732b5e02002a371196a2607f839bab166970ea06e6ecc602cb446848"
+ARG miniforge_checksum="5a827a62d98ba2217796a9dc7673380257ed7c161017565fba8ce785fb21a599"
 
 # Install all OS dependencies for notebook server that starts but lacks all
 # features (e.g., download as all possible file formats)
@@ -104,18 +104,18 @@ RUN wget --quiet "https://github.com/conda-forge/miniforge/releases/download/${m
     /bin/bash "${miniforge_installer}" -f -b -p $CONDA_DIR && \
     rm "${miniforge_installer}" && \
     # Conda configuration see https://conda.io/projects/conda/en/latest/configuration.html
-    echo "conda ${CONDA_VERSION}" >> $CONDA_DIR/conda-meta/pinned && \
-    conda config --system --set auto_update_conda false && \
-    conda config --system --set show_channel_urls true && \
-    if [ ! $PYTHON_VERSION = 'default' ]; then conda install --yes python=$PYTHON_VERSION; fi && \
-    conda list python | grep '^python ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned && \
-    conda install --quiet --yes \
-    "conda=${CONDA_VERSION}" \
+    mamba list conda | grep '^conda ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned && \
+    mamba list mamba | grep '^mamba ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned && \
+    mamba config --system --set auto_update_conda false && \
+    mamba config --system --set show_channel_urls true && \
+    if [ ! $PYTHON_VERSION = 'default' ]; then mamba install --yes python=$PYTHON_VERSION; fi && \
+    mamba list python | grep '^python ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned && \
+    mamba install --quiet --yes \
     'pip' \
     'tini=0.18.0' && \
-    conda update --all --quiet --yes && \
-    conda list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
-    conda clean --all -f -y && \
+    mamba update --all --quiet --yes && \
+    mamba list tini | grep tini | tr -s ' ' | cut -d ' ' -f 1,2 >> $CONDA_DIR/conda-meta/pinned && \
+    mamba clean --all -f -y && \
     rm -rf $HOME/.cache/yarn && \
     fix-permissions $CONDA_DIR && \
     fix-permissions $HOME
@@ -127,8 +127,8 @@ RUN wget --quiet "https://github.com/conda-forge/miniforge/releases/download/${m
 # Do all this in a single RUN command to avoid duplicating all of the
 # files across image layers when the permissions change
 COPY requirements.txt /tmp/requirements.txt
-RUN conda install --quiet --yes --file /tmp/requirements.txt && \
-    conda clean --all -f -y && \
+RUN mamba install --quiet --yes --file /tmp/requirements.txt && \
+    mamba clean --all -f -y && \
     npm cache clean --force && \
     jupyter notebook --generate-config && \
     jupyter lab clean && \
