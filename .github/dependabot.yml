@@ -12,17 +12,7 @@ updates:
     schedule:
       interval: "daily"
 
-  - package-ecosystem: "pip"
-    directory: "/base-notebook"
-    schedule:
-      interval: "daily"
-
   - package-ecosystem: "docker"
-    directory: "base-notebook/"
-    schedule:
-      interval: "daily"
-
-  - package-ecosystem: "docker"
-    directory: "binder/"
+    directory: "/"
     schedule:
       interval: "daily"
